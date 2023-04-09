@@ -1,0 +1,91 @@
+body.login {
+    background-image: url('../img/fondo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+body.dashboard{
+    background: white;
+}
+
+/* Cambia el color del header */
+#header {
+    background-color: #009340;
+}
+
+/* Cambia el color del título */
+#branding h1 a {
+    color: white;
+    font-weight: 600;
+}
+
+#branding h1 a:visited {
+    color: white;
+}
+
+.Logo {
+    max-width: 80px;
+    height: auto;
+}
+
+/* Aplica estilos para pantallas con ancho menor a 768px */
+@media (max-width: 768px) {
+    #branding h1 a span {
+        display: none;
+    }
+
+    #branding h1 a {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* Agrega estilos para los user tools */
+/* Oculta el botón "View Site" */
+#user-tools .view-site {
+    display: none;
+}
+
+/* Estilo para el mensaje de bienvenida */
+#user-tools #welcome {
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+/* Estilo para los enlaces del usuario */
+.userlinks a {
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+#user-tools {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+}
+
+.userlinks a:hover {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+/* Breadcrums */
+
+div.breadcrumbs{
+    background-color: #c7fd03;
+    color: black;
+}
+
+div.breadcrumbs a {
+    color: black;
+    font-weight: bold;
+}
+
+div.breadcrumbs a:hover {
+    color: black;
+}

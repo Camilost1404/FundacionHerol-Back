@@ -1,0 +1,69 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="shortcut icon" href="{% static 'img/Logo-FundacionHerol.png' %}">
+{% endblock %}
+
+{%block branding %}
+    <h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <img src="{% static 'img/Logo-FundacionHerol.png' %}" alt="Logo Fundación" class='Logo'/>
+        <span>Administración Fundación Herol</span>
+    </a>
+    </h1>
+{% endblock %}
+
+{% block welcome-msg %}
+    <span id="welcome">{{ _('Bienvenido') }}, <strong>{{ user }}</strong></span>
+{% endblock %}
+
+{% block userlinks %}
+    <div class="userlinks">
+        {% if user.is_active and user.is_staff %}
+            <div>
+                <a href="{% url 'admin:password_change' %}">Cambiar contraseña</a>
+                <a href="{% url 'admin:logout' %}" style="margin-left: 10px;">Cerrar sesión</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content_title %}
+{% endblock %}
+
+{% block content-related %}
+    <div class="module" id="recent-actions-module">
+        <h2>Acciones Recientes</h2>
+        <table class="admin-actions">
+            <thead>
+                <tr>
+                    <th>Acción</th>
+                    <th>Usuario</th>
+                    <th>Objeto</th>
+                    <th>Tiempo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in recent_actions %}
+                    <tr class="{% cycle 'row1' 'row2' %}">
+                        <td>{{ log.action }}</td>
+                        <td>{{ log.user }}</td>
+                        <td>{{ log.object }}</td>
+                        <td>Hace {{ log.time|timesince }}</td>
+                    </tr>
+                    <tr class="{% cycle 'row1' 'row2' %}">
+                        <td colspan="4">{{ log.change_message }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="module-footer"><a href="{{ site_url }}">{{ _('View all recent actions') }}</a></p>
+    </div>
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin.css' %}">
+{% endblock %}

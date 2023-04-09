@@ -103,5 +103,7 @@ Desktop.ini
 ._*
 Thumbs.db
 
+media
+
 node_modules
 gestor/migrations/0012_alter_actividad_id_alter_patio_id_and_more.py
