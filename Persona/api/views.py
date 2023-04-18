@@ -4,7 +4,7 @@ from rest_framework import status
 from django.db import transaction
 from datetime import datetime
 
-from Persona.api.serializer import VoluntarioSerializer, PersonaSerializer
+from Persona.api.serializer import VoluntarioSerializer, PersonaSerializer, NiñoSerializerView, VoluntarioSerializerView
 from Persona.models import *
 
 
@@ -51,3 +51,18 @@ class RegisterVoluntarioView(APIView):
             return Response(status=status.HTTP_201_CREATED)
 
         return Response(serializer_voluntario.errors + serializer_persona.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class NiñoView(APIView):
+
+    def get(self,request):
+        niños = Niño.objects.all()
+        serializer = NiñoSerializerView(niños, many=True)
+        return Response(serializer.data)
+
+class VoluntarioView(APIView):
+
+    def get(self,request):
+        voluntario = Voluntario.objects.all()
+        serializer = VoluntarioSerializerView(voluntario, many = True)
+        return Response(serializer.data)       
