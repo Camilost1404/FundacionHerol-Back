@@ -19,6 +19,7 @@ class VoluntarioSerializer(serializers.ModelSerializer):
         model = Voluntario
         fields = ['experiencia']
 
+
 class PersonaSerializerView(serializers.ModelSerializer):
 
     class Meta:
@@ -26,16 +27,20 @@ class PersonaSerializerView(serializers.ModelSerializer):
         model = Persona
         fields = '__all__'
 
+
 class NiñoSerializerView(serializers.ModelSerializer):
     persona = PersonaSerializerView()
+
     class Meta:
 
         model = Niño
         fields = '__all__'
 
+
 class VoluntarioSerializerView(serializers.ModelSerializer):
     persona = PersonaSerializerView()
+
     class Meta:
 
         model = Voluntario
-        fields = '__all__'        
+        fields = '__all__'

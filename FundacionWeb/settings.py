@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Persona',
     'User',
+    'Podio',
 ]
 
 MIDDLEWARE = [

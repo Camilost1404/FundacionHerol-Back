@@ -55,14 +55,15 @@ class RegisterVoluntarioView(APIView):
 
 class NiñoView(APIView):
 
-    def get(self,request):
+    def get(self, request):
         niños = Niño.objects.all()
         serializer = NiñoSerializerView(niños, many=True)
         return Response(serializer.data)
 
+
 class VoluntarioView(APIView):
 
-    def get(self,request):
+    def get(self, request):
         voluntario = Voluntario.objects.all()
-        serializer = VoluntarioSerializerView(voluntario, many = True)
-        return Response(serializer.data)       
+        serializer = VoluntarioSerializerView(voluntario, many=True)
+        return Response(serializer.data)
