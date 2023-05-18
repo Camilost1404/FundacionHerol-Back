@@ -25,7 +25,10 @@ class PersonaSerializerView(serializers.ModelSerializer):
     class Meta:
 
         model = Persona
-        fields = ['tipo_documento', 'numero_documento', 'nombre', 'apellido', 'fecha_nacimiento', 'genero', 'telefono']
+        fields = ['tipo_documento', 'numero_documento', 'nombre',
+                  'apellido', 'fecha_nacimiento', 'genero', 'telefono']
+
+        exclude = ('numero_documento',)
 
 
 class NiñoSerializerView(serializers.ModelSerializer):
@@ -38,9 +41,17 @@ class NiñoSerializerView(serializers.ModelSerializer):
 
 
 class VoluntarioSerializerView(serializers.ModelSerializer):
+
     persona = PersonaSerializerView()
 
     class Meta:
 
         model = Voluntario
         fields = '__all__'
+
+
+class NiñoCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Niño
+        fields = ['persona_id']
