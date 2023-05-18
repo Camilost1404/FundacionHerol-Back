@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders", # Esto es una libreria
+    'drf_yasg', # Esto es una libreria
+    'rest_framework', # Esto es una libreria
     'Persona',
     'User',
     'Podio',
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -143,3 +147,9 @@ AUTH_USER_MODEL = "User.User"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'Persona', 'media')
 
 MEDIA_URL = '/media/'
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Configuración Pasarela con STRIPE
+
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')

@@ -25,7 +25,7 @@ class PersonaSerializerView(serializers.ModelSerializer):
     class Meta:
 
         model = Persona
-        fields = '__all__'
+        fields = ['tipo_documento', 'numero_documento', 'nombre', 'apellido', 'fecha_nacimiento', 'genero', 'telefono']
 
 
 class NiñoSerializerView(serializers.ModelSerializer):
