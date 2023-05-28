@@ -6,7 +6,9 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
-        # tu lógica personalizada
+        extra_fields.setdefault('is_staff', True)
+        # extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault('is_active', True)
 
         # crear la instancia del modelo
         user = self.model(email=email, **extra_fields)

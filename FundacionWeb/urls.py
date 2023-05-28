@@ -40,7 +40,8 @@ urlpatterns = [
     path('redocs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/', include('Persona.api.router')),
     path('api/', include('Podio.api.router')),
-    path('api/', include('Donante.api.router'))
+    path('api/', include('Donante.api.router')),
+    path('api/', include('User.api.router')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
