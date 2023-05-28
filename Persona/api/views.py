@@ -2,9 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
-from datetime import datetime
 
-from Persona.api.serializer import VoluntarioSerializer, PersonaSerializer, NiñoSerializerView, VoluntarioSerializerView, NiñoCreateSerializer, PersonaSerializerView
+from Persona.api.serializer import *
 from Persona.models import *
 
 
@@ -72,15 +71,16 @@ class VoluntarioView(APIView):
 class GuardarNiño(APIView):
     @transaction.atomic
     def post(self, request):
-        serializer = PersonaSerializer(data=request.data)
+
+        serializer = NiñoSerializer(data=request.data)
+
         if serializer.is_valid(raise_exception=True):
             persona = serializer.save()
             serializer2 = NiñoCreateSerializer(data=request.data)
             if serializer2.is_valid(raise_exception=True):
                 serializer2.save(persona=persona)
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BorrarNiño(APIView):
@@ -95,8 +95,59 @@ class modificarNiño(APIView):
     def put(self, request):
         id_niño = request.query_params['id_niño']
         persona = Persona.objects.get(numero_documento=id_niño)
-        serializer = PersonaSerializerView(persona, request.data)
+        serializer = NiñoSerializerUpdate(persona, request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data)
+            return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class NiñoEspecificoView(APIView):
+
+    def get(self, request):
+        id_niño = request.query_params['id_niño']
+        niño = Persona.objects.get(numero_documento=id_niño)
+        serializer = PersonaSerializerView2(niño)
+        return Response(serializer.data)
+
+
+class VoluntarioEspecifico(APIView):
+    def get(self, request):
+        id_voluntario = request.query_params['id_voluntario']
+        voluntario = Voluntario.objects.get(persona_id=id_voluntario)
+        serializer = VoluntarioEspecificoSerializerView(voluntario)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class BorrarVoluntario(APIView):
+    def delete(self, request):
+        id_voluntario = request.query_params['id_voluntario']
+        persona = Persona.objects.filter(numero_documento=id_voluntario)
+        persona.delete()
+        return Response('Voluntario con documento '+id_voluntario+' eliminado')
+
+
+class EstadoVoluntario(APIView):
+    def patch(self, request):
+        id_voluntario = request.query_params['id_voluntario']
+        persona = Voluntario.objects.get(persona_id=id_voluntario)
+        if not persona.estado:
+            data = {'estado': 1}
+            serializer = VoluntarioEstadoSerializer(persona, data=data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response('Error', status=status.HTTP_403_FORBIDDEN)
+
+class ModificarVoluntario(APIView):
+    @transaction.atomic
+    def put(self,request):
+        id_voluntario = request.query_params['id_voluntario']
+        voluntario = Persona.objects.get(numero_documento = id_voluntario)
+        serializer = VoluntarioFotoSerializer(voluntario,data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response('Voluntario modificado con exito', status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

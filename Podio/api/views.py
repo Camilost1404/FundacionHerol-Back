@@ -4,7 +4,8 @@ from rest_framework import status
 from django.db import transaction
 
 from Podio.models import Podio
-from Podio.api.serializers import PodioSerializer
+from Persona.models import Niño
+from Podio.api.serializers import PodioSerializer, NiñoDocumSerializer
 
 
 class AllPodiosView(APIView):
@@ -32,12 +33,19 @@ class PodioView(APIView):
     def put(self, request, id):
 
         podio = Podio.objects.get(id=id)
-        serializer = PodioSerializer(podio, data=request.data)
 
-        if (serializer.is_valid(raise_exception=True)):
+        # Actualizar el campo persona_id en el objeto podio
+        podio.persona_id = request.data.get('persona')
 
-            serializer.save()
+        podio.save()
 
-            return Response(status=status.HTTP_200_OK)
+        serializer = PodioSerializer(podio)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class DocumentoNiños(APIView):
+    def get(self, request):
+        niños = Niño.objects.all()
+        serializer = NiñoDocumSerializer(niños, many=True)
+        return Response(serializer.data)
