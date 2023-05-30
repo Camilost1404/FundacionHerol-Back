@@ -3,5 +3,7 @@ from Donante.api.views import *
 
 
 urlpatterns = [
-    path('donante/create-checkout-session/' , CreateCheckoutSession.as_view()),
+    path('donacion', RealizarDonacion.as_view()),
+    path('donante/registrar', DonanteRegister.as_view()),
+    path('ver_donacion/', VerDonacion.as_view()),
 ]

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 import environ
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,7 +33,7 @@ SECRET_KEY = 'django-insecure-c#3j-gowxl-@vdgsb5eqogx1@y(2g7g_)@&uubdxg_2@y)5#s$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'f2e9-190-242-41-66.ngrok.io']
 
 
 # Application definition
@@ -44,12 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "corsheaders", # Esto es una libreria
-    'drf_yasg', # Esto es una libreria
-    'rest_framework', # Esto es una libreria
+    "corsheaders",  # Esto es una libreria
+    'drf_yasg',  # Esto es una libreria
+    'rest_framework',  # Esto es una libreria
+    'rest_framework_simplejwt.token_blacklist',
     'Persona',
     'User',
     'Podio',
+    'Donante',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +156,31 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Configuración Pasarela con STRIPE
 
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+
+# Email config
+
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+
+# Sessions
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 3600  # Tiempo de vida de la sesión en segundos (1 hora)
+
+# jwt
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True
+}

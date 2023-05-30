@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
-from Persona.api.serializer import PersonaSerializerView
+from Persona.api.serializer import NiñoPodioSerializer
 from Podio.models import Podio
 from Persona.models import Niño
 
 class PodioSerializer(serializers.ModelSerializer):
 
-    persona = PersonaSerializerView()
+    persona = NiñoPodioSerializer()
 
     class Meta:
 

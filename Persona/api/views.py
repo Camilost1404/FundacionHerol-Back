@@ -6,6 +6,9 @@ from django.db import transaction
 from Persona.api.serializer import *
 from Persona.models import *
 
+from django.conf import settings
+import os
+
 
 class RegisterVoluntarioView(APIView):
 
@@ -16,7 +19,7 @@ class RegisterVoluntarioView(APIView):
 
         if serializer_voluntario.is_valid(raise_exception=True):
 
-            # Crear un objeto ModelB con el nombre y apellido proporcionados y guardar en la base de datos.
+            # Crear un objeto con el nombre y apellido proporcionados y guardar en la base de datos.
             persona, created = Persona.objects.get_or_create(
                 numero_documento=request.data['numero_documento'],
                 defaults={
@@ -27,29 +30,29 @@ class RegisterVoluntarioView(APIView):
                     'genero': request.data['genero'],
                     'telefono': request.data['telefono'],
                     'fecha_nacimiento': request.data['fecha_nacimiento'],
+                    'foto': 'image/DEFAULT.png'
                 }
             )
 
-            if not created:
-                serializer_persona = PersonaSerializer(
-                    persona, data=request.data)
+            if created:
+                persona.save()
 
-                if serializer_persona.is_valid(raise_exception=True):
+            voluntario_existente = Voluntario.objects.filter(
+                persona=persona).exists()
 
-                    persona = serializer_persona.save()
+            # Si la persona ya tiene un voluntario asociado, retornar un error
+
+            if voluntario_existente:
+                return Response({"error": "Voluntario se encuentra registrado - Por favor contactese con nosotros", "message": 'Rectifica tú numero de documento'}, status=status.HTTP_400_BAD_REQUEST)
 
             voluntario = Voluntario(
                 persona=persona, experiencia=request.data['experiencia'])
-
-            # Si la persona ya tiene un voluntario asociado, retornar un error
-            if voluntario.persona:
-                return Response({"error": "Voluntario ya se encuentra registrado - Por favor contactese con nosotros"}, status=status.HTTP_400_BAD_REQUEST)
 
             voluntario.save()
 
             return Response(status=status.HTTP_201_CREATED)
 
-        return Response(serializer_voluntario.errors + serializer_persona.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer_voluntario.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class NiñoView(APIView):
@@ -94,6 +97,7 @@ class BorrarNiño(APIView):
 class modificarNiño(APIView):
     def put(self, request):
         id_niño = request.query_params['id_niño']
+        print(request.data)
         persona = Persona.objects.get(numero_documento=id_niño)
         serializer = NiñoSerializerUpdate(persona, request.data)
         if serializer.is_valid(raise_exception=True):
@@ -140,12 +144,13 @@ class EstadoVoluntario(APIView):
         else:
             return Response('Error', status=status.HTTP_403_FORBIDDEN)
 
+
 class ModificarVoluntario(APIView):
     @transaction.atomic
-    def put(self,request):
+    def put(self, request):
         id_voluntario = request.query_params['id_voluntario']
-        voluntario = Persona.objects.get(numero_documento = id_voluntario)
-        serializer = VoluntarioFotoSerializer(voluntario,data=request.data)
+        voluntario = Persona.objects.get(numero_documento=id_voluntario)
+        serializer = VoluntarioFotoSerializer(voluntario, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response('Voluntario modificado con exito', status=status.HTTP_200_OK)

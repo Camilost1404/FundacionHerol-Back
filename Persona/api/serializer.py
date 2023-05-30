@@ -53,6 +53,15 @@ class PersonaSerializerView(serializers.ModelSerializer):
                   'apellido', 'fecha_nacimiento']
 
 
+class NiñoPodioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = Persona
+        fields = ['tipo_documento', 'numero_documento',
+                  'apellido', 'fecha_nacimiento', 'nombre', 'foto']
+
+
 class NiñoSerializerUpdate(serializers.ModelSerializer):
 
     class Meta:
